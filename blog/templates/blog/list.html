@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <title> {{ title }} </title>
+<title> {{ title }} </title>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    {% for item in object_list %}
-    <li> {{ item.title }}</li>
-    <!-- <p> {{ item.content }}</p> -->
+<div class='col-12 col-md-9 mx-auto'>
+    {% for object in object_list %}
+    {% include 'blog/list-inline.html' with blog_post=object detail=False%}
+    <br>
     {% endfor %}
 </div>
 {% endblock %}

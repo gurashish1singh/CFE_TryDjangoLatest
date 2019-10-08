@@ -1,0 +1,15 @@
+<div class="card {% if not blog_post.publish_date %} bg-dark text-light {% endif %}">
+    <div class="card-body">
+        <h2> {{ blog_post.title }} </h2>
+        <br>
+        <p> {{ blog_post.content | linebreaks | truncatewords:30 }} </p>
+        <small class='text-muted'>{{ blog_post.publish_date}}</small>
+        <br>
+        {% if not detail %}
+        {% if not blog_post.publish_date %}
+        Draft
+        {% endif %}
+        <a class="btn btn-primary" href="{{blog_post.get_absolute_url}}" role="button">View</a>
+        {% endif %}
+    </div>
+</div>

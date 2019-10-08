@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <title> {{ title }} </title>
+<title> {{ title }} </title>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1> {{ object.title }}</h1>
-    <p> {{ object.content }}</p>
+    {% include 'blog/list-inline.html' with blog_post=object detail=True%}
+
+    {% if request.user.is_authenticated %}
+    {% if request.user.is_staff %}
+    <div class="col-12">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-primary" href="/blog" role="button">Back</a>
+            <a class="btn btn-warning" href="{{object.slug}}/edit" role="button">Edit</a>
+            <a class="btn btn-danger" href="{{object.slug}}/delete" role="button">Delete</a>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
 </div>
 {% endblock %}

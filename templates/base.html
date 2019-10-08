@@ -14,10 +14,12 @@
 </head>
 
 <body>
-    {% block content %}
+    {% include 'navbar.html' %}
+<div class="container-fluid">
+        {% block content %}
 
-    {% endblock %}
-
+        {% endblock %}
+</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

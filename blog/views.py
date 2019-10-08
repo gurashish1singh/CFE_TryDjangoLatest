@@ -1,7 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .models import *
+
+from .forms import *
 
 # Create your views here.
 
@@ -40,7 +44,10 @@ from .models import *
 # List View
 def blog_post_list(request):
 
-    post_list = BlogPost.objects.all()
+    post_list = BlogPost.objects.all().published # To view only the blogs that have been published!
+    if request.user.is_authenticated:
+        post_list = BlogPost.objects.filter(user=request.user)
+        # post_list = (post_list | my_post_list).distinct()
     template_name = 'blog/list.html'
     context = {
         'title' : 'List of all Posts',
@@ -48,14 +55,25 @@ def blog_post_list(request):
     }
     return render(request,template_name,context)
 
+# Login required validation
+@login_required(login_url='/login')
+# @staff_member_required
 # Create view
 def blog_post_create(request):
 
-    
-    template_name = 'blog/create.html'
+    form = BlogPostForm(request.POST or None)
+    if form.is_valid():
+        print(form.cleaned_data)    # Shows data on the terminal
+        # obj = BlogPost.objects.create(**form.cleaned_data) # This saves the data in the database, if using forms.form
+        obj = form.save(commit=False)
+        obj.user = request.user
+        obj.save()
+        # form.save() # if using forms.ModelForm
+        form = BlogPostForm()
+    template_name = 'blog/form.html'
     context = {
         'title' : 'Create a Post',
-        'form' : None,
+        'form' : form,
     }
     return render(request,template_name,context)
 
@@ -71,22 +89,34 @@ def blog_post_detail(request, slug):
     return render(request,template_name,context)
 
 # Update view
+# Login required validation
+@login_required(login_url='/login')
+# @staff_member_required
 def blog_post_update(request, slug):
 
     obj = get_object_or_404(BlogPost, slug=slug)
-    template_name = 'blog/update.html'
+    form = BlogPostForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+    template_name = 'blog/form.html'
     context = {
-        'title' : obj.title,
-        'object' : obj,
-        'form' : None,
+        'title' : f'Update {obj.title}',
+        # 'object' : obj,
+        'form' : form,
     }
     return render(request,template_name,context)
 
 # Delete View
+# Login required validation
+@login_required(login_url='/login')
+# @staff_member_required
 def blog_post_delete(request, slug):
 
     obj = get_object_or_404(BlogPost, slug=slug)
     template_name = 'blog/delete.html'
+    if request.method == 'POST':
+        obj.delete()
+        return redirect ('/blog')
     context = {
         'title' : obj.title,
         'object' : obj,
