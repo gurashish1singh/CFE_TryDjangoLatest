@@ -22,12 +22,18 @@ from django.conf import settings
 # Blog App
 from blog.views import *
 
+# Searches App
+from searches.views import search_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Blog Views
     path('blog-new/',blog_post_create),
     path('blog/', include('blog.urls')),
+
+    # Searches Views
+    path('search/', search_view),
 ]
 
 # For Static and Media files to be shown
