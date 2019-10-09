@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# For Static and Media files
+from django.conf import settings
+
 # Blog App
 from blog.views import *
 
@@ -26,3 +29,10 @@ urlpatterns = [
     path('blog-new/',blog_post_create),
     path('blog/', include('blog.urls')),
 ]
+
+# For Static and Media files to be shown
+if settings.DEBUG:
+    # Test mode
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

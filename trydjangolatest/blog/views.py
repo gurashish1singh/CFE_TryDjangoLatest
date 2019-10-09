@@ -61,7 +61,7 @@ def blog_post_list(request):
 # Create view
 def blog_post_create(request):
 
-    form = BlogPostForm(request.POST or None)
+    form = BlogPostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         print(form.cleaned_data)    # Shows data on the terminal
         # obj = BlogPost.objects.create(**form.cleaned_data) # This saves the data in the database, if using forms.form

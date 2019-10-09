@@ -1,5 +1,10 @@
 <div class="card {% if not blog_post.publish_date %} bg-dark text-light {% endif %}">
     <div class="card-body">
+        {% if blog_post.image %}
+        <a href="{{ blog_post.get_absolute_url }}"> 
+            <img src='{{ blog_post.image.url}}' class='card-img-top'>
+        </a>
+        {% endif %}
         <h2> {{ blog_post.title }} </h2>
         <br>
         <p> {{ blog_post.content | linebreaks | truncatewords:30 }} </p>

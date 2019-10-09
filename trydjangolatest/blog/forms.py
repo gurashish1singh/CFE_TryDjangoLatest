@@ -7,6 +7,7 @@ class BlogPostForm(forms.ModelForm):
         fields = [
             'title',
             'slug',
+            'image',
             'content',
             'publish_date',
         ]
